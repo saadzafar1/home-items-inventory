@@ -1,0 +1,33 @@
+body {
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+.p-divider-solid.p-divider-horizontal:before {
+  border-top-style: solid;
+}
+.p-button.google-signin-btn img {
+  width: 20px;
+}
+/* Change color of progress spinner */
+@keyframes p-progress-spinner-color {
+  100%,
+  0% {
+    stroke: var(--primary-color);
+  }
+  40% {
+    stroke: var(--primary-color);
+  }
+  66% {
+    stroke: var(--primary-color);
+  }
+  80%,
+  90% {
+    stroke: var(--primary-color);
+  }
+}
+
+.p-progress-spinner.small {
+    width: 20px;
+    height: 20px;
+}

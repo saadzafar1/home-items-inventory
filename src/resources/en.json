@@ -1,0 +1,14 @@
+{
+    "fnameRequiredMessage": "First Name is required",
+    "lnameRequiredMessage": "Last Name is required",
+    "emailRequiredMessage": "Email is required",
+    "emailValidMessage": "Please enter a valid email address",
+    "emailInUseMessage":"Email is already in use!",
+    "passwordRequiredMessage": "Password is required",
+    "passwordMinLengthMessage": "Password must be at least 8 characters",
+    "cpasswordRequiredMessage": "Please confirm your password",
+    "cpasswordSameAsMessage": "Passwords do not match",
+    "popupClosedErrorMessage": "Popup closed by the user!",
+    "invalidCredentialsMessage": "Email or password is incorrect!"
+
+}
