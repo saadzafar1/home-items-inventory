@@ -10,5 +10,4 @@
     "cpasswordSameAsMessage": "Passwords do not match",
     "popupClosedErrorMessage": "Popup closed by the user!",
     "invalidCredentialsMessage": "Email or password is incorrect!"
-
 }

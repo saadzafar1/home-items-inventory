@@ -1,141 +1,161 @@
 <template>
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-4 mx-auto">
-    <div class="text-center mb-5">
-      <!-- <img src="images/blocks/logos/hyper.svg" alt="Image" height="50" class="mb-3"> -->
-      <h1 class="text-900 text-3xl font-medium mb-3 mt-0">Create an Account</h1>
+  <div class="row justify-content-center">
+    <div class="col-sm-6 col-lg-5">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Create an Account</h2>
+
+          <form @submit.prevent="handleSubmit">
+            <div
+              v-if="error"
+              class="alert alert-danger alert-dismissible fade show"
+              role="alert"
+            >
+              {{ error }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="row mb-3">
+              <div class="form-group col">
+                <!-- <label class="text-sm" for="fname">First Name</label> -->
+                <input
+                  class="form-control"
+                  :class="{ 'is-invalid': showFNameErrors }"
+                  id="fname"
+                  type="text"
+                  v-model="state.fname"
+                  @blur="v$.fname.$touch()"
+                  placeholder="First Name"
+                />
+                <div
+                  v-if="showFNameErrors"
+                  v-for="error in v$.fname.$silentErrors"
+                  class="invalid-feedback"
+                >
+                  {{ error.$message }}
+                </div>
+              </div>
+              <div class="form-group col">
+                <!-- <label class="text-sm" for="lname">Last Name</label> -->
+                <input
+                  class="form-control"
+                  :class="{ 'is-invalid': showLNameErrors }"
+                  id="lname"
+                  type="text"
+                  v-model="state.lname"
+                  @blur="v$.lname.$touch()"
+                  placeholder="Last Name"
+                />
+                <div
+                  v-if="showLNameErrors"
+                  v-for="error in v$.lname.$silentErrors"
+                  class="invalid-feedback"
+                >
+                  {{ error.$message }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <!-- <label class="text-sm" for="email">Email</label> -->
+              <input
+                class="form-control"
+                :class="{ 'is-invalid': showEmailErrors }"
+                id="email"
+                type="email"
+                v-model="state.email"
+                @blur="v$.email.$touch()"
+                placeholder="Email"
+              />
+
+              <div
+                v-if="showEmailErrors"
+                v-for="error in v$.email.$silentErrors"
+                class="invalid-feedback"
+              >
+                {{ error.$message }}
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <!-- <label class="text-sm" for="password">Password</label> -->
+              <input
+                class="form-control"
+                :class="{ 'is-invalid': showPasswordErrors }"
+                id="password"
+                type="password"
+                v-model="state.password"
+                @blur="v$.password.$touch()"
+                placeholder="Password"
+              />
+              <div
+                v-if="showPasswordErrors"
+                v-for="error in v$.password.$silentErrors"
+                class="invalid-feedback"
+              >
+                {{ error.$message }}
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <!-- <label class="text-sm" for="cpassword">Confirm Password</label> -->
+              <input
+                class="form-control"
+                :class="{ 'is-invalid': showCPasswordErrors }"
+                id="cpassword"
+                type="password"
+                v-model="state.cpassword"
+                @blur="v$.cpassword.$touch()"
+                placeholder="Confirm Password"
+              />
+              <div
+                v-if="showCPasswordErrors"
+                v-for="error in v$.cpassword.$silentErrors"
+                class="invalid-feedback"
+              >
+                {{ error.$message }}
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <span>
+                Already have an account?
+                <router-link
+                  to="/signin"
+                  class="font-medium no-underline text-blue-500 text-right cursor-pointer"
+                  >Sign In</router-link
+                >
+              </span>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto mb-4">
+              <button
+                :disabled="v$.$invalid || isLoading"
+                type="submit"
+                class="btn btn-primary btn-block d-flex justify-content-center"
+              >
+                <Loader v-if="isLoading" :isLoading="isLoading" size="small" />
+                <span v-else> Sign Up</span>
+              </button>
+            </div>
+            <div class="divider my-3">
+              <span class="divider-content">OR</span>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+              <button
+                @click="handleSocialSignin"
+                type="button"
+                label="Continue with Google"
+                class="w-full d-flex justify-content-center align-items-center btn btn-light google-signin-btn"
+              >
+                <img alt="Google sign-in" src="@/assets/img/Google_Logo.png" />
+                <span class="ms-2">Continue with Google</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <form @submit.prevent="handleSubmit">
-      <Message v-if="error" severity="error" :closable="false">{{
-        error
-      }}</Message>
-      <div class="formgrid grid">
-        <div class="field col">
-          <!-- <label class="text-sm" for="fname">First Name</label> -->
-          <InputText
-            class="w-full p-inputtext-sm"
-            :class="{ 'p-invalid': showFNameErrors }"
-            id="fname"
-            type="text"
-            v-model="state.fname"
-            @blur="v$.fname.$touch()"
-            placeholder="First Name"
-          />
-          <small
-            v-if="showFNameErrors"
-            v-for="error in v$.fname.$silentErrors"
-            class="p-error mt-2 block text-xs"
-            >{{ error.$message }}</small
-          >
-        </div>
-        <div class="field col">
-          <!-- <label class="text-sm" for="lname">Last Name</label> -->
-          <InputText
-            class="w-full p-inputtext-sm"
-            :class="{ 'p-invalid': showLNameErrors }"
-            id="lname"
-            type="text"
-            v-model="state.lname"
-            @blur="v$.lname.$touch()"
-            placeholder="Last Name"
-          />
-          <small
-            v-if="showLNameErrors"
-            v-for="error in v$.lname.$silentErrors"
-            class="p-error mt-2 block text-xs"
-            >{{ error.$message }}</small
-          >
-        </div>
-      </div>
-      <div class="field mb-3">
-        <!-- <label class="text-sm" for="email">Email</label> -->
-        <InputText
-          class="w-full p-inputtext-sm"
-          :class="{ 'p-invalid': showEmailErrors }"
-          id="email"
-          type="email"
-          v-model="state.email"
-          @blur="v$.email.$touch()"
-          placeholder="Email"
-        />
-
-        <small
-          v-if="showEmailErrors"
-          v-for="error in v$.email.$silentErrors"
-          class="p-error mt-2 block text-xs"
-          >{{ error.$message }}</small
-        >
-      </div>
-      <div class="field mb-3">
-        <!-- <label class="text-sm" for="password">Password</label> -->
-        <InputText
-          class="w-full p-inputtext-sm"
-          :class="{ 'p-invalid': showPasswordErrors }"
-          id="password"
-          type="password"
-          v-model="state.password"
-          @blur="v$.password.$touch()"
-          placeholder="Password"
-        />
-        <small
-          v-if="showPasswordErrors"
-          v-for="error in v$.password.$silentErrors"
-          class="p-error mt-2 block text-xs"
-          >{{ error.$message }}</small
-        >
-      </div>
-      <div class="field mb-3">
-        <!-- <label class="text-sm" for="cpassword">Confirm Password</label> -->
-        <InputText
-          class="w-full p-inputtext-sm"
-          :class="{ 'p-invalid': showCPasswordErrors }"
-          id="cpassword"
-          type="password"
-          v-model="state.cpassword"
-          @blur="v$.cpassword.$touch()"
-          placeholder="Confirm Password"
-        />
-        <small
-          v-if="showCPasswordErrors"
-          v-for="error in v$.cpassword.$silentErrors"
-          class="p-error mt-2 block text-xs"
-          >{{ error.$message }}</small
-        >
-      </div>
-
-      <div class="flex flex-column align-items-center mb-4">
-        <span class="mb-4">
-          Already have an account?
-          <router-link
-            to="/signin"
-            class="font-medium no-underline text-blue-500 text-right cursor-pointer"
-            >Sign In</router-link
-          >
-        </span>
-        <Button
-          :disabled="v$.$invalid || isLoading"
-          type="submit"
-          label="Sign Up"
-          class="w-full sm:w-6"
-        >
-          <Loader v-if="isLoading" :isLoading="isLoading" size="small" />
-        </Button>
-      </div>
-      <Divider align="center">
-        <span class="text-sm">OR</span>
-      </Divider>
-      <div class="flex justify-content-center mt-4">
-        <Button
-          @click="handleSocialSignin"
-          type="button"
-          label="Continue with Google"
-          class="w-full justify-content-center sm:w-6 p-button-plain p-button-outlined google-signin-btn"
-        >
-          <img alt="Google sign-in" src="@/assets/img/Google_Logo.png" />
-          <span class="ml-2">Continue with Google</span>
-        </Button>
-      </div>
-    </form>
   </div>
 </template>
 <script>
@@ -233,7 +253,7 @@ export default {
           email: state.email,
           password: state.password,
         }
-        await authState.signupUser(payload);
+        await authState.signupUser(payload)
       } catch (err) {
         if (checkSubString(err.code, 'email-already-in-use')) {
           error.value = t('emailInUseMessage')
@@ -247,7 +267,7 @@ export default {
       try {
         isLoading.value = true
         error.value = null
-        await authState.oAuthSignin();
+        await authState.oAuthSignin()
       } catch (err) {
         if (checkSubString(err.code, 'popup-closed-by-user')) {
           error.value = t('popupClosedErrorMessage')
@@ -273,6 +293,6 @@ export default {
   },
   components: {
     Loader,
-  }
+  },
 }
 </script>

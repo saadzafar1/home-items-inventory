@@ -1,95 +1,98 @@
 <template>
-  <div class="surface-card p-4 shadow-2 border-round w-full lg:w-4 mx-auto">
-    <div class="text-center mb-5">
-      <h1 class="text-900 text-3xl font-medium mb-3 mt-0">Sign In</h1>
-    </div>
-    <form @submit.prevent="handleSubmit">
-      <Message v-if="error" severity="error" :closable="false">{{
-        error
-      }}</Message>
-      <div class="field mb-3">
-        <InputText
-          class="w-full p-inputtext-sm"
-          :class="{ 'p-invalid': showEmailErrors }"
-          id="email"
-          type="email"
-          v-model="state.email"
-          @blur="v$.email.$touch()"
-          placeholder="Email"
-        />
-
-        <small
-          v-if="showEmailErrors"
-          v-for="error in v$.email.$silentErrors"
-          class="p-error mt-2 block text-xs"
-          >{{ error.$message }}</small
-        >
-      </div>
-      <div class="field mb-3">
-        <InputText
-          class="w-full p-inputtext-sm"
-          :class="{ 'p-invalid': showPasswordErrors }"
-          id="password"
-          type="password"
-          v-model="state.password"
-          @blur="v$.password.$touch()"
-          placeholder="Password"
-        />
-        <small
-          v-if="showPasswordErrors"
-          v-for="error in v$.password.$silentErrors"
-          class="p-error mt-2 block text-xs"
-          >{{ error.$message }}</small
-        >
-      </div>
-
-      <div class="flex flex-column align-items-center mb-4">
-        <div
-          class="flex flex-column sm:flex-row justify-content-between sm:align-items-center mb-4 w-full"
-        >
-          <div class="flex align-items-center mb-3 sm:mb-0">
-            <Checkbox
-              id="keepsigned"
-              :binary="true"
-              v-model="state.checked"
-              class="mr-2"
-            ></Checkbox>
-            <label for="keepsigned">Keep me signed in</label>
-          </div>
-          <span>
-            Don't have an account?
-            <router-link
-              to="/signup"
-              class="font-medium no-underline text-blue-500 text-right cursor-pointer"
-              >Sign Up</router-link
+  <div class="row justify-content-center">
+    <div class="col-sm-6 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="text-center mb-4">Sign In</h2>
+          <form @submit.prevent="handleSubmit">
+            <div
+              v-if="error"
+              class="alert alert-danger alert-dismissible fade show"
+              role="alert"
             >
-          </span>
-        </div>
+              {{ error }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="form-group mb-3">
+              <input
+                class="w-full form-control"
+                :class="{ 'is-invalid': showEmailErrors }"
+                id="email"
+                type="email"
+                v-model="state.email"
+                @blur="v$.email.$touch()"
+                placeholder="Email"
+              />
+              <div
+                v-if="showEmailErrors"
+                v-for="error in v$.email.$silentErrors"
+                class="invalid-feedback"
+              >
+                {{ error.$message }}
+              </div>
+            </div>
+            <div class="form-group mb-2">
+              <input
+                class="w-full form-control"
+                :class="{ 'is-invalid': showPasswordErrors }"
+                id="password"
+                type="password"
+                v-model="state.password"
+                @blur="v$.password.$touch()"
+                placeholder="Password"
+              />
+              <div
+                v-if="showPasswordErrors"
+                v-for="error in v$.password.$silentErrors"
+                class="invalid-feedback"
+              >
+                {{ error.$message }}
+              </div>
+            </div>
 
-        <Button
-          :disabled="v$.$invalid || isLoading"
-          type="submit"
-          label="Sign In"
-          class="w-full sm:w-6"
-        >
-          <Loader v-if="isLoading" :isLoading="isLoading" size="small" />
-        </Button>
+            <div class="mb-4">
+              <span>
+                Don't have an account?
+                <router-link
+                  to="/signup"
+                  class="font-medium no-underline text-blue-500 text-right cursor-pointer"
+                  >Sign Up</router-link
+                >
+              </span>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto mb-4">
+              <button
+                :disabled="v$.$invalid || isLoading"
+                type="submit"
+                class="btn btn-primary btn-block d-flex justify-content-center"
+              >
+                <Loader v-if="isLoading" :isLoading="isLoading" size="small" />
+                <span v-else> Sign In </span>
+              </button>
+            </div>
+            <div class="divider my-3">
+              <span class="divider-content">OR</span>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+              <button
+                @click="handleSocialSignin"
+                type="button"
+                label="Continue with Google"
+                class="w-full d-flex justify-content-center align-items-center btn btn-light google-signin-btn"
+              >
+                <img alt="Google sign-in" src="@/assets/img/Google_Logo.png" />
+                <span class="ms-2">Continue with Google</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <Divider align="center">
-        <span>OR</span>
-      </Divider>
-      <div class="flex justify-content-center mt-4">
-        <Button
-          @click="handleSocialSignin"
-          type="button"
-          label="Continue with Google"
-          class="w-full justify-content-center sm:w-6 p-button-plain p-button-outlined google-signin-btn"
-        >
-          <img alt="Google sign-in" src="@/assets/img/Google_Logo.png" />
-          <span class="ml-2">Continue with Google</span>
-        </Button>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 <script>
@@ -111,7 +114,6 @@ export default {
     const state = reactive({
       email: '',
       password: '',
-      checked: false,
     })
     const validationRules = computed(function () {
       return {
@@ -141,12 +143,15 @@ export default {
       try {
         const payload = {
           email: state.email,
-          password: state.password
+          password: state.password,
         }
         await authState.signinUser(payload)
       } catch (err) {
-        console.log('err',JSON.stringify(err));;
-        if (checkSubString(err.code, 'user-not-found') || checkSubString(err.code, 'wrong-password')) {
+        console.log('err', JSON.stringify(err))
+        if (
+          checkSubString(err.code, 'user-not-found') ||
+          checkSubString(err.code, 'wrong-password')
+        ) {
           error.value = t('invalidCredentialsMessage')
         }
       } finally {
@@ -175,11 +180,11 @@ export default {
       error,
       isLoading,
       handleSocialSignin,
-      handleSubmit
+      handleSubmit,
     }
   },
   components: {
-    Loader
-  }
+    Loader,
+  },
 }
 </script>

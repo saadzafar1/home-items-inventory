@@ -1,16 +1,17 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import Navbar from './components/Navbar.vue';
+import { RouterView } from 'vue-router'
+import Navbar from './components/Navbar.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const { autoSigninUser } = useAuthStore()
+autoSigninUser()
 </script>
 
 <template>
-    <Navbar />
+  <Navbar />
   <main class="mt-4">
-    <RouterView />
+    <div class="container">
+      <RouterView />
+    </div>
   </main>
 </template>
-
-<style>
-
-
-</style>
